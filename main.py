@@ -4,7 +4,10 @@ board = chess.Board()
 
 playing = True
 while (playing):
-    human_move = input()
-    
     print(board)
-    playing = False
+    human_move = input("Enter move:")
+
+    if human_move == 'exit':
+        break
+
+    board.push_san(human_move)
