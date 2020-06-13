@@ -1,4 +1,8 @@
 piece_values = {'p': 10, 'n': 30, 'b': 30, 'r': 50, 'q': 90, 'k': 900}
+
+def calculate_best_move(legal_moves, depth):
+    return legal_moves[-1].uci()
+
 def get_piece_value(piece, turn):
     if turn == True:
         return piece_values[piece.lower()]
