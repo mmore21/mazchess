@@ -1,3 +1,10 @@
+piece_values = {'p': 10, 'n': 30, 'b': 30, 'r': 50, 'q': 90, 'k': 900}
+def get_piece_value(piece, turn):
+    if turn == True:
+        return piece_values[piece.lower()]
+    else:
+        return -piece_values[piece.lower()]
+
 def alphabeta(node, depth, alpha, beta, maximizingPlayer):
     if depth == 0 or node.terminal:
         return node.val
