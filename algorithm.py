@@ -29,5 +29,23 @@ def alphabeta(node, depth, alpha, beta, maximizingPlayer):
                 break
         return value
 
+def evaluate(material_weight, num_white_pieces, num_black_pieces, player_color):
+    score = material_weight * (num_white_pieces - num_black_pieces) * player_color
+    return score
+
+def negamax(legal_moves, depth):
+    if depth == 0:
+        return evaluate()
+
+    max = float('-inf')
+
+    for move in legal_moves:
+        score = -negamax(legal_moves, depth - 1)
+        if score > max:
+            max = score
+    
+    return max
+
+
 # initial call
 # alphabeta(origin, depth, float('-inf'), float('inf'), True)
