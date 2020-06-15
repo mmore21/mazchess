@@ -10,7 +10,7 @@
 
     <p>You can integrate chessboard.js with the <a href="https://github.com/jhlywa/chess.js">chess.js</a> library to only allow legal moves.</p>
     
-    <!--- Begin Example HTML ------------------------------------------------------>
+
     <div id="myBoard" style="width: 400px"></div>
     <label>Status:</label>
     <div id="status"></div>
@@ -18,11 +18,11 @@
     <div id="fen"></div>
     <label>PGN:</label>
     <div id="pgn"></div>
-    <!--- End Example HTML -------------------------------------------------------->
+ 
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js" integrity="sha384-s3XgLpvmHyscVpijnseAmye819Ee3yaGa8NxstkJVyA6nuDFjt59u1QvuEl/mecz" crossorigin="anonymous"></script>
     <script>
-    // --- Begin Example JS --------------------------------------------------------
+
     // NOTE: this example uses the chess.js library:
     // https://github.com/jhlywa/chess.js
     
@@ -42,6 +42,17 @@
         return false
       }
     }
+
+    function makeAiMove(source, target) {
+        var ai_move = game.move({
+              from: source,
+              to: target,
+              promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            })
+        game.move(ai_move)
+        board.position(game.fen())
+        updateStatus()
+    }
     
     function onDrop (source, target) {
       // see if the move is legal
@@ -54,17 +65,20 @@
       // illegal move
       if (move === null) return 'snapback'
       
-      // TODO: pass move to python backend
+      // pass move to python backend and generate AI move
       var move = {"from": source, "to": target}
       var moveJSON = JSON.stringify(move)
 
       fetch('/', {
           method: 'POST',
-          body: moveJSON
+          body: moveJSON,
       }).then(function (response) {
           return response.text();
       }).then(function (text) {
-          console.log(text);
+          source = text.substr(0, 2)
+          target = text.substr(2, 2)
+          console.log(source + " " +  target);
+          window.setTimeout(makeAiMove(source, target), 250)
       })
 
       updateStatus()

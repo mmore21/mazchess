@@ -6,12 +6,25 @@ class Agent:
         self.board = chess.Board()
 
     def add_move(self, beg_pos, end_pos):
-        st = beg_pos + end_pos
-        print(type(st), st)
-        move = chess.Move.from_uci(st)
-        print(move)
-        self.board.push(move)
-        print(self.board)
+        raw_human_move = beg_pos + end_pos
+        print(raw_human_move)
+        human_move = chess.Move.from_uci(raw_human_move)
+        self.board.push(human_move)
+
+        if self.board.is_game_over():
+            print("Checkmate (White).")
+            self.board = chess.Board()
+
+        ai_move = self.negamax_root(3)
+        print(ai_move)
+        self.board.push(ai_move)
+
+        if self.board.is_game_over():
+            print("Checkmate (Black).")
+            self.board = chess.Board()
+
+        return ai_move
+
 
     def evaluate(self):
         wp = len(self.board.pieces(chess.PAWN, chess.WHITE))
@@ -45,6 +58,7 @@ class Agent:
         max = -99999
         best_move = None
 
+
         for move in self.board.legal_moves:
             self.board.push(move)
             score = -self.negamax(depth - 1)
@@ -59,7 +73,6 @@ class Agent:
     def negamax(self, depth):
         if depth == 0:
             score = self.evaluate()
-            #print(score)
             return score
 
         max = -99999
@@ -72,6 +85,3 @@ class Agent:
                 max = score
                 
         return max
-
-ai = Agent(3)
-ai.add_move('c2', 'c4')
