@@ -1,12 +1,14 @@
 # mazchess
 
-Chess AI game engine.
+Chess AI game engine. Uses negamax search (variant of minimax) with a basic evaluation function.
 
 ## Implementation
 
-* Alpha-beta pruning
-* ML / DL on previous games?
+* Python 3
+* Flask
+* python-chess
+* chessboard.js
 
 ## License
 
-* TODO: Add MIT license
+* MIT License
