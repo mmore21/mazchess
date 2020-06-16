@@ -5,6 +5,9 @@ class Agent:
         self.depth = depth
         self.board = chess.Board()
 
+    def reset_board(self):
+        self.board = chess.Board()
+
     def add_move(self, beg_pos, end_pos):
         raw_human_move = beg_pos + end_pos
         print(raw_human_move)
@@ -13,7 +16,7 @@ class Agent:
 
         if self.board.is_game_over():
             print("Checkmate (White).")
-            self.board = chess.Board()
+            self.reset_board()
 
         ai_move = self.negamax_root(3)
         print(ai_move)
@@ -21,7 +24,7 @@ class Agent:
 
         if self.board.is_game_over():
             print("Checkmate (Black).")
-            self.board = chess.Board()
+            self.reset_board()
 
         return ai_move
 

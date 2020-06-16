@@ -3,7 +3,7 @@ import agent
 
 
 app = Flask(__name__)
-ai = agent.Agent(depth=2)
+ai = agent.Agent(depth=5)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -16,8 +16,9 @@ def home():
         ai_move = ai.add_move(beg_pos, end_pos)
 
         return str(ai_move), 200
-
-    return render_template("index.html")
+    else:
+        ai.reset_board()
+        return render_template("index.html")
 
 if __name__ == "__main__":
     app.run()
