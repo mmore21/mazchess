@@ -2,12 +2,8 @@
 
 Chess AI game engine. Uses negamax search (variant of minimax) with a basic evaluation function.
 
-Several improvements and issues to work on include:
-* Early game openings of AI
-* Ensuring AI can castle
-* Removing repeated moves by AI
-* Promotion of AI / Human
-* Checkmates and stalemates
+Several improvements to add:
+* Early game openings, avoiding stalemates, and not making repeated moves.
 * Reinforcement learning on past games to improve AI
 
 ## Implementation
@@ -16,6 +12,8 @@ Several improvements and issues to work on include:
 * Flask
 * python-chess
 * chessboard.js
+* chess.js
+* Bootstrap
 
 ## License
 

@@ -1,139 +1,47 @@
 <html>
 <head>
+    <title>mazchess</title>
     <base href="static/">
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chessboard-1.0.0.min.css') }}">
     <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/chessboard-1.0.0.min.js') }}"></script>
 </head>
 <body>
-    <p><a href="examples#5000">&larr; Back to all examples.</a></p>
-
-    <p>You can integrate chessboard.js with the <a href="https://github.com/jhlywa/chess.js">chess.js</a> library to only allow legal moves.</p>
-    
-
-    <div id="myBoard" style="width: 400px"></div>
-    <label>Status:</label>
-    <div id="status"></div>
-    <label>FEN:</label>
-    <div id="fen"></div>
-    <label>PGN:</label>
-    <div id="pgn"></div>
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto">
+          <h1 class="text-center mt-4">mazchess</h1>
+          <p class="text-center">
+            <a href="https://github.com/mmore21/mazchess">GitHub</a>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mx-auto mb-4" id="myBoard" style="width: 450px"></div>
+      </div>
+      <div class="row">
+        <div class="mx-auto column w-50">
+          <div class="row">
+            <label><strong>Status:&ensp;</strong></label>
+            <div id="status"></div>
+          </div>
+          <div class="row">
+            <label><strong>FEN:&ensp;</strong></label>
+            <div id="fen"></div>
+          </div>
+          <div class="row">
+            <label><strong>PGN:&ensp;</strong></label>
+            <div id="pgn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
  
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js" integrity="sha384-s3XgLpvmHyscVpijnseAmye819Ee3yaGa8NxstkJVyA6nuDFjt59u1QvuEl/mecz" crossorigin="anonymous"></script>
-    <script>
-
-    // NOTE: this example uses the chess.js library:
-    // https://github.com/jhlywa/chess.js
-    
-    var board = null
-    var game = new Chess()
-    var $status = $('#status')
-    var $fen = $('#fen')
-    var $pgn = $('#pgn')
-    
-    function onDragStart (source, piece, position, orientation) {
-      // do not pick up pieces if the game is over
-      if (game.game_over()) return false
-    
-      // only pick up pieces for the side to move
-      if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-          (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-        return false
-      }
-    }
-
-    function makeAiMove(source, target) {
-        var ai_move = game.move({
-              from: source,
-              to: target,
-              promotion: 'q' // NOTE: always promote to a queen for example simplicity
-            })
-        game.move(ai_move)
-        board.position(game.fen())
-        updateStatus()
-    }
-    
-    function onDrop (source, target) {
-      // see if the move is legal
-      var move = game.move({
-        from: source,
-        to: target,
-        promotion: 'q' // NOTE: always promote to a queen for example simplicity
-      })
-    
-      // illegal move
-      if (move === null) return 'snapback'
-      
-      // pass move to python backend and generate AI move
-      var move = {"from": source, "to": target}
-      var moveJSON = JSON.stringify(move)
-
-      fetch('/', {
-          method: 'POST',
-          body: moveJSON,
-      }).then(function (response) {
-          return response.text();
-      }).then(function (text) {
-          source = text.substr(0, 2)
-          target = text.substr(2, 2)
-          console.log(source + " " +  target);
-          window.setTimeout(makeAiMove(source, target), 250)
-      })
-
-      updateStatus()
-    }
-    
-    // update the board position after the piece snap
-    // for castling, en passant, pawn promotion
-    function onSnapEnd () {
-      board.position(game.fen())
-    }
-    
-    function updateStatus () {
-      var status = ''
-    
-      var moveColor = 'White'
-      if (game.turn() === 'b') {
-        moveColor = 'Black'
-      }
-    
-      // checkmate?
-      if (game.in_checkmate()) {
-        status = 'Game over, ' + moveColor + ' is in checkmate.'
-      }
-    
-      // draw?
-      else if (game.in_draw()) {
-        status = 'Game over, drawn position'
-      }
-    
-      // game still on
-      else {
-        status = moveColor + ' to move'
-    
-        // check?
-        if (game.in_check()) {
-          status += ', ' + moveColor + ' is in check'
-        }
-      }
-    
-      $status.html(status)
-      $fen.html(game.fen())
-      $pgn.html(game.pgn())
-    }
-    
-    var config = {
-      draggable: true,
-      position: 'start',
-      onDragStart: onDragStart,
-      onDrop: onDrop,
-      onSnapEnd: onSnapEnd
-    }
-    board = Chessboard('myBoard', config)
-    
-    updateStatus()
-    // --- End Example JS ----------------------------------------------------------
-    </script>
+    <script src="{{ url_for('static', filename='js/chess.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/game_control.js') }}"></script>
 </body>
 </html>

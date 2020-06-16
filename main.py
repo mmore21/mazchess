@@ -1,7 +1,5 @@
 import chess
-import algorithm # Temporary until Agent class complete
 import agent
-
 
 def evaluate():
     wp = len(board.pieces(chess.PAWN, chess.WHITE))
@@ -49,14 +47,12 @@ def negamax_root(depth):
 def negamax(depth):
     if depth == 0:
         score = evaluate()
-        #print(score)
         return score
 
     max = -99999
 
     for move in board.legal_moves:
         board.push(move)
-        #print(board)
         score = -negamax(depth - 1)
         board.pop()
         if score > max:
@@ -64,30 +60,21 @@ def negamax(depth):
             
     return max
 
-def get_move_info(legal_moves):
-    for move in list(legal_moves):
-        move_str = move.uci().lower()
-        file_index = chess.FILE_NAMES.index(move_str[0])
-        rank_index = chess.RANK_NAMES.index(move_str[1])
-        piece = board.piece_at(chess.square(file_index=file_index, rank_index=rank_index))
-        print(move_str, file_index, rank_index, piece)
-    print(legal_moves)
-
 # Create a new game
-ai = agent.Agent(depth=1)
+ai = agent.Agent(depth=3)
 board = chess.Board()
 playing = True
+
+print("################\nDEMO CLI VERSION\n################\n")
 
 it = 0
 
 while playing:
     # Display board
     print(board)
-    print(board.turn)
 
-    #get_move_info(board.legal_moves)
-
-    # Get player move
+    # Get human move
+    print(board.legal_moves)
     human_move = input("Enter move:")
 
     # Exit the game
@@ -108,11 +95,13 @@ while playing:
 
     # Display board
     print(board)
-    print(board.turn)
+
     # Get AI move
     ai_move = negamax_root(3)
-    #ai_move = ai.get_move(list(board.legal_moves))
-    print(ai_move, type(ai_move))
+    if board.piece_type_at(ai_move.from_square) == chess.PAWN and chess.square_rank(ai_move.to_square) == 0:
+        print("Promotion")
+        ai_move.promotion = chess.QUEEN
+    print(ai_move)
 
     try:
         board.push(ai_move)
