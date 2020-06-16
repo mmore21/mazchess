@@ -1,4 +1,9 @@
-# mazchess
+<p align="center">
+  <img src="https://github.com/mmore21/mazchess/blob/master/static/img/icon.png" width="100" />
+</p>
+
+<h2 align="center">mazchess</h2>
+![GitHub](https://img.shields.io/github/license/mmore21/mazchess)
 
 Chess AI game engine. Uses negamax search (variant of minimax) with a basic evaluation function.
 
