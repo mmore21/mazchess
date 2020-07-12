@@ -26,4 +26,4 @@ Chess AI game engine. Uses negamax search (variant of minimax) with a basic eval
 
 ## License
 
-* MIT License
+mazchess is available under the [MIT License](https://github.com/mmore21/mazchess/blob/master/LICENSE).
