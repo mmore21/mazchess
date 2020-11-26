@@ -1,9 +1,22 @@
 import chess
-import algorithm # Temporary until Agent class complete
+import algorithm 
 import agent
 
-
 def evaluate():
+    """Evaluates the current status of the board by computing a score.
+
+    Calculates a total score which is the combination of two scores: the material 
+    score and the mobility score. The material score is calculated for each piece
+    with a specific weight relative to its importance. The mobility score is
+    the number of legal moves for the current turn multiplied by an arbitrary
+    threshold. These are then combined and mulitiplied by -1 or 1 depending on
+    which player currently holds the turn.
+
+    Returns:
+        The score of the current player's board status. Positive scores are for
+        white and negative scores are for black.
+    """
+
     wp = len(board.pieces(chess.PAWN, chess.WHITE))
     bp = len(board.pieces(chess.PAWN, chess.BLACK))
     wn = len(board.pieces(chess.KNIGHT, chess.WHITE))
@@ -15,7 +28,7 @@ def evaluate():
     wq = len(board.pieces(chess.QUEEN, chess.WHITE))
     bq = len(board.pieces(chess.QUEEN, chess.BLACK))
 
-    # Note: These values do not include the king
+    # This material scoring system does not include the king piece
     material_score = 9*(wq - bq) + 5*(wr - br) + 3*(wb - bb + wn - bn) + 1*(wp - bp)
 
     num_white_pieces = wp + wn + wb + wr + wq
@@ -31,95 +44,85 @@ def evaluate():
 
     return score
 
-def negamax_root(depth):
-    max = -99999
+def get_optimal_move():
+    max_score = None 
     best_move = None
-
+    
     for move in board.legal_moves:
         board.push(move)
         score = -negamax(depth - 1)
         board.pop()
-        if score > max:
+        if max_score is None or score > max_score:
             best_move = move
-            max = score
-            
-    print(max)
+            max_score = score
+
+    return (best_move, max_score)
+
+
+def negamax_root(depth):
+    best_move, max_score = get_optimal_move()
+           
+    print(max_score)
+
     return best_move
 
 def negamax(depth):
     if depth == 0:
         score = evaluate()
-        #print(score)
         return score
 
-    max = -99999
+    max_score = get_optimal_move()[1]
 
-    for move in board.legal_moves:
-        board.push(move)
-        #print(board)
-        score = -negamax(depth - 1)
-        board.pop()
-        if score > max:
-            max = score
-            
-    return max
+    print(max_score)
 
-def get_move_info(legal_moves):
-    for move in list(legal_moves):
-        move_str = move.uci().lower()
-        file_index = chess.FILE_NAMES.index(move_str[0])
-        rank_index = chess.RANK_NAMES.index(move_str[1])
-        piece = board.piece_at(chess.square(file_index=file_index, rank_index=rank_index))
-        print(move_str, file_index, rank_index, piece)
-    print(legal_moves)
+    return max_score
 
-# Create a new game
-ai = agent.Agent(depth=1)
-board = chess.Board()
-playing = True
+if __name__ == "__main__":
+    # Create a new game
+    ai = agent.Agent(depth=1)
+    board = chess.Board()
+    playing = True
 
-it = 0
+    it = 0
 
-while playing:
-    # Display board
-    print(board)
-    print(board.turn)
+    while playing:
+        # Display board
+        print(board)
+        print(board.turn)
 
-    #get_move_info(board.legal_moves)
+        # Get player move
+        human_move = input("Enter move:")
 
-    # Get player move
-    human_move = input("Enter move:")
+        # Exit the game
+        if human_move == 'exit':
+            break
 
-    # Exit the game
-    if human_move == 'exit':
-        break
+        try:
+            board.push_san(human_move)
+        except ValueError:
+            print("Invalid Move")
+            print(board.legal_moves)
+            continue
 
-    try:
-        board.push_san(human_move)
-    except ValueError:
-        print("Invalid Move")
-        print(board.legal_moves)
-        continue
+        # Check endgame
+        if board.is_game_over():
+            print("Checkmate. White Wins.")
+            break
 
-    # Check endgame
-    if board.is_game_over():
-        print("Checkmate. White Wins.")
-        break
+        # Display board
+        print(board)
+        print(board.turn)
 
-    # Display board
-    print(board)
-    print(board.turn)
-    # Get AI move
-    ai_move = negamax_root(3)
-    #ai_move = ai.get_move(list(board.legal_moves))
-    print(ai_move, type(ai_move))
+        # Get AI move
+        ai_move = negamax_root(depth=3)
+        print(ai_move, type(ai_move))
 
-    try:
-        board.push(ai_move)
-    except ValueError:
-        print("Error: AI Predicted Invalid Move")
+        try:
+            board.push(ai_move)
+        except ValueError:
+            print("Error: AI Predicted Invalid Move")
 
-    # Check endgame
-    if board.is_game_over():
-        print("Checkmate. Black Wins.")
-        break
+        # Check endgame
+        if board.is_game_over():
+            print("Checkmate. Black Wins.")
+            break

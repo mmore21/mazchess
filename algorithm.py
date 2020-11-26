@@ -46,6 +46,7 @@ def negamax(legal_moves, depth):
     
     return max
 
+if __name__ == "__main__":
+    # Initial call
+    # alphabeta(origin, depth, float('-inf'), float('inf'), True)
 
-# initial call
-# alphabeta(origin, depth, float('-inf'), float('inf'), True)
