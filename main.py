@@ -79,18 +79,20 @@ def negamax(depth):
 
 if __name__ == "__main__":
     # Create a new game
-    ai = agent.Agent(depth=1)
+    ai = agent.Agent(depth=3)
     board = chess.Board()
     playing = True
+
+    print("################\nDEMO CLI VERSION\n################\n")
 
     it = 0
 
     while playing:
         # Display board
         print(board)
-        print(board.turn)
 
-        # Get player move
+        # Get human move
+        print(board.legal_moves)
         human_move = input("Enter move:")
 
         # Exit the game
@@ -111,11 +113,13 @@ if __name__ == "__main__":
 
         # Display board
         print(board)
-        print(board.turn)
 
         # Get AI move
-        ai_move = negamax_root(depth=3)
-        print(ai_move, type(ai_move))
+        ai_move = negamax_root(3)
+        if board.piece_type_at(ai_move.from_square) == chess.PAWN and chess.square_rank(ai_move.to_square) == 0:
+            print("Promotion")
+            ai_move.promotion = chess.QUEEN
+        print(ai_move)
 
         try:
             board.push(ai_move)
