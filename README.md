@@ -5,7 +5,7 @@
 <h2 align="center">mazchess</h2>
 
 <p align="center">
-  <a href="https://github.com/mmore21/mazchess/blob/master/LICENSE" title="Last Commit"><img src="https://img.shields.io/github/license/mmore21/mazchess"></a>
+  <a href="https://github.com/mmore21/mazchess/blob/master/LICENSE" title="License"><img src="https://img.shields.io/github/license/mmore21/mazchess"></a>
 </p>
 
 Chess AI game engine. Uses negamax search (variant of minimax) with a basic evaluation function.
@@ -23,6 +23,7 @@ Chess AI game engine. Uses negamax search (variant of minimax) with a basic eval
 
 * Further develop early game openings, avoiding stalemates, and not making repeated moves.
 * Use reinforcement learning on past games to improve AI.
+* Add opening repertoire.
 
 ## License
 
