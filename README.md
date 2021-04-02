@@ -21,7 +21,8 @@ Chess AI game engine. Uses negamax search (variant of minimax) with a basic eval
 
 ## Outlook
 
-* Further develop early game openings, avoiding stalemates, and not making repeated moves.
+* Avoid stalements.
+* Avoid repeating moves.
 * Use reinforcement learning on past games to improve AI.
 * Add opening repertoire.
 
